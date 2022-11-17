@@ -2,12 +2,14 @@ import "./App.css";
 
 import { RefObject, useEffect, useRef, useState } from "react";
 
-type Todo = {
+import { Todo } from "./components/Todo";
+
+type TodoType = {
   text: string;
 };
 
 function App() {
-  const [todos, setTodos] = useState<Todo[]>([{ text: "Initial Todo" }]);
+  const [todos, setTodos] = useState<TodoType[]>([{ text: "Initial Todo" }]);
   const [inputValue, setInputValue] = useState<string>();
   const inputRef = useRef<HTMLInputElement>(null);
 
@@ -15,7 +17,7 @@ function App() {
 
   function addTodo() {
     inputRef.current?.focus();
-    const newTodo = { text: inputValue } as Todo;
+    const newTodo = { text: inputValue } as TodoType;
     if (!Boolean(newTodo.text.trim())) {
       throw new Error("Text is empty");
     }
@@ -23,7 +25,7 @@ function App() {
     setInputValue("");
   }
 
-  function deleteTodo(todo: Todo) {
+  function deleteTodo(todo: TodoType) {
     setTodos((oldTodos) => [...oldTodos].filter((e) => e !== todo));
   }
 
@@ -40,13 +42,11 @@ function App() {
           placeholder="What woult you like to remember?"
         />
         <button onClick={addTodo}>Add todo</button>
-      </div>
-      <div>
-        {todos.map((e) => (
-          <li>
-            {e.text} <button onClick={() => deleteTodo(e)}>Delete</button>
-          </li>
-        ))}
+        <div className="Todos">
+          {todos.map((e) => (
+            <Todo text={e.text} deleteTodo={() => deleteTodo(e)} />
+          ))}
+        </div>
       </div>
     </div>
   );
